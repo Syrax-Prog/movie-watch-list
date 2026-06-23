@@ -1,5 +1,10 @@
 @include('navbar')
 
+<?php
+$cur_page_series = $series['current'];
+$cur_page_movie = $movies['current'];
+?>
+
 <style>
     body {
         background-color: #111119;
@@ -54,16 +59,9 @@
             </p>
 
             <span class="d-flex gap-2 justify-content-center align-items-center mt-4">
-                <?php
-                $cur_page = 1;
-                if(!empty(base64_decode(urldecode(request()->segment(3))))){
-                    $cur_page_movie = base64_decode(urldecode(request()->segment(3)))[0]; 
-                }
-                ?>
-
                 {{-- PREV --}}
                 @if (!empty($movies['prev']))
-                    <a href="{{ '/get_movie/' . request()->segment(2) . '/' . urlencode(base64_encode($movies['prev'] . '##1')) }}"
+                    <a href="{{ '/get_movie/' . request()->segment(2) . '/' . urlencode(base64_encode($movies['prev'] . '##' . $cur_page_series)) }}"
                     class="btn btn-outline-warning btn-sm px-3">
                         ← Prev
                     </a>
@@ -82,7 +80,7 @@
 
                 {{-- NEXT --}}
                 @if (!empty($movies['next']))
-                    <a href="{{ '/get_movie/' . request()->segment(2) . '/' . urlencode(base64_encode($movies['next'] . '##1')) }}"
+                    <a href="{{ '/get_movie/' . request()->segment(2) . '/' . urlencode(base64_encode($movies['next'] . '##' . $cur_page_series)) }}"
                     class="btn btn-outline-warning btn-sm px-3">
                         Next →
                     </a>
@@ -175,6 +173,40 @@
             <p class="text-white small mb-0">
                 Found {{ ($series['totalResults'] ?? 0) }} matches
             </p>
+
+            <span class="d-flex gap-2 justify-content-center align-items-center mt-4">
+                {{-- PREV --}}
+                @if (!empty($series['prev']))
+                    <a href="{{ '/get_movie/' . request()->segment(2) . '/' . urlencode(base64_encode($cur_page_movie . '##' . $series['prev'])) }}"
+                    class="btn btn-outline-warning btn-sm px-3">
+                        ← Prev
+                    </a>
+                @else
+                    <span class="btn btn-outline-secondary btn-sm px-3 disabled opacity-50">
+                        ← Prev
+                    </span>
+                @endif
+
+
+                {{-- PAGE INDICATOR (optional but nice) --}}
+                <span class="text-white small px-2">
+                    Page {{ $cur_page_series . "#" . ceil($series['totalResults'] / 10) }}
+                </span>
+
+
+                {{-- NEXT --}}
+                @if (!empty($movies['next']))
+                    <a href="{{ '/get_movie/' . request()->segment(2) . '/' . urlencode(base64_encode($cur_page_movie . '##' . $series['next'])) }}"
+                    class="btn btn-outline-warning btn-sm px-3">
+                        Next →
+                    </a>
+                @else
+                    <span class="btn btn-outline-warning btn-sm px-3 disabled opacity-50">
+                        Next →
+                    </span>
+                @endif
+
+            </span>
         </div>
 
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
