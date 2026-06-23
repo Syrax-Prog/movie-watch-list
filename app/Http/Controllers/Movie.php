@@ -18,6 +18,9 @@ class Movie extends Controller
         }
 
         $data = [];
+        $json_movie = [];
+        $json_series =  [];
+
         if($search_val != ''){
             $url = "https://www.omdbapi.com/?s=" . $search_val . "&apikey=" . config('constants.api_key') . "&page=" . $page_movie . "&type=movie";
             $json_movie = Http::withoutVerifying()->get($url)->json();
@@ -25,10 +28,12 @@ class Movie extends Controller
             $url = "https://www.omdbapi.com/?s=" . $search_val . "&apikey=" . config('constants.api_key') . "&page=" . $page_series . "&type=series";
             $json_series = Http::withoutVerifying()->get($url)->json();
 
-            $data['movies'] = array_merge($json_movie, $this->get_pagination($json_movie['totalResults'], $page_movie));
-            $data['series'] = array_merge($json_series, $this->get_pagination($json_series['totalResults'], $page_series));
+            $data['movies'] = $json_movie;
+            $data['series'] = $json_series;
         }
 
+        $data['movies'] = array_merge($json_movie, $this->get_pagination($json_movie['totalResults'] ?? 0, $page_movie));
+        $data['series'] = array_merge($json_series, $this->get_pagination($json_series['totalResults'] ?? 0, $page_series));
         return view('home', $data);
     }
 

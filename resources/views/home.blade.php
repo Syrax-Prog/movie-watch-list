@@ -74,7 +74,7 @@ $cur_page_movie = $movies['current'];
 
                 {{-- PAGE INDICATOR (optional but nice) --}}
                 <span class="text-white small px-2">
-                    Page {{ $cur_page_movie . "#" . ceil($movies['totalResults'] / 10) }}
+                    Page {{ $cur_page_movie . "#" . (ceil($movies['totalResults'] ?? 0) / 10) }}
                 </span>
 
 
@@ -190,7 +190,7 @@ $cur_page_movie = $movies['current'];
 
                 {{-- PAGE INDICATOR (optional but nice) --}}
                 <span class="text-white small px-2">
-                    Page {{ $cur_page_series . "#" . ceil($series['totalResults'] / 10) }}
+                    Page {{ $cur_page_series . "#" . (ceil($series['totalResults'] ?? 0) / 10) }}
                 </span>
 
 
